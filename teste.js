@@ -11,3 +11,4 @@ console.log("sos luiz, calma, vou te torar daqui, mas me ajuda a sair daqui tbm 
 console.log("???? torar ???? n precisa amigo...")
 console.log("calma cara, vou te tirar daquii, escrevi errado")
 console.log("ata... perfeito! vamos por favordsafdsfasdfasdfasd")
+console.log("ok, vamos sair daqui, mas me ajuda a sair tbm, por favor");
