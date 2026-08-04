@@ -1,0 +1,40 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #415a77;
+    background-color: #e0e1dd;
+    font-size: 18px;
+}
+
+header {
+    text-align: center;
+    padding: 20px 10px;
+    
+}
+
+nav a {
+    margin: 0 8px;
+    color: #6404ae;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+}
+
+article {
+    max-width: 700px;
+    padding: 0 20px;
+}
+
+article p {
+    text-align: justify;
+    line-height: 1.7;
+}
+
+footer {
+    color: #0d1b2a;
+    padding: 10px;
+    text-align: center;
+}
