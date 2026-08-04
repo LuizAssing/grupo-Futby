@@ -12,3 +12,4 @@ console.log("???? torar ???? n precisa amigo...")
 console.log("calma cara, vou te tirar daquii, escrevi errado")
 console.log("ata... perfeito! vamos por favordsafdsfasdfasdfasd")
 console.log("ok, vamos sair daqui, mas me ajuda a sair tbm, por favor");
+console.log("so pa ver se ainda pega");
