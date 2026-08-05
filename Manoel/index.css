@@ -2,20 +2,85 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    color: #415a77;
+    color: #252627;
     background-color: #e0e1dd;
     font-size: 18px;
+    background-image: url("ImgDeFundo.jpg");
+    background-size: cover;
+    background-position: center;
+    border: 2px solid #0d1b2a;
+    
 }
 
-header {
-    text-align: center;
-    padding: 20px 10px;
-    
+header h1 {
+    background-image:
+    linear-gradient(rgba(13, 27, 42, 0.55), rgba(13, 27, 42, 0.55)),
+    url("https://scansource.com.br/wp-content/webp-express/webp-images/uploads/2023/12/1-1-1.jpg.webp");
+  background-size: cover;
+  background-position: center;  
+  background-repeat: no-repeat;
+  color: #ffffff;
+  margin: 0;
+  padding: 50px 20px;
+  min-height: 200px;             
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  text-decoration: underline;
+  border-radius: 0px 0px 20px 20px;
+  
+}
+
+.link1{
+    color: #030cac;
+    text-decoration: none;
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+}
+
+.link1:hover {
+    background-color: #677dd6;
+    color: #030cac;
+    transition: 0.5s;
+}
+
+.link2{
+    color: #9f030a;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 999px;
+}
+
+.link2:hover {
+    background-color: #ef656c;
+    color: #9f030a;
+    transition: 0.5s;
+}
+
+.link3{
+    color: #04bd1c;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 999px;
+}
+
+.link3:hover {
+    background-color: #77e486;
+    color: #04bd1c;
+    transition: 0.5s;
 }
 
 nav a {
     margin: 0 8px;
-    color: #6404ae;
+
+}
+
+nav {
+    text-align: center;
+    
 }
 
 main {
@@ -33,8 +98,14 @@ article p {
     line-height: 1.7;
 }
 
+article h2 {
+    color: #0c44ac;
+    text-decoration: underline;
+}
+
 footer {
     color: #0d1b2a;
     padding: 10px;
     text-align: center;
 }
+
