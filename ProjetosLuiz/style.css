@@ -42,12 +42,18 @@ article {
 }
 body {
     background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS73Bn5Y258sZjHNvv8hFdkB9gjD7gJnUOgSQ_tTOIIJKIlVAN88SIkIe8&s=10');
+    background-color: #ffffff;
+    padding: 20px;
+}
+figure {
+    margin: 0;
 }
 #imgesquerda {
     left: 100px;
     position: absolute;
     top: 10px;
     width: 150px;
+    max-width: 100%;
     height: auto;
 }
 #imgdireita {
@@ -55,5 +61,6 @@ body {
     position: absolute;
     top: 10px;
     width: 150px;
+    max-width: 100%;
     height: auto;
 }
