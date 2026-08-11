@@ -1,0 +1,155 @@
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    color: #333333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #2c3e50;
+    color: #ffffff;
+    padding: 15px 20px;
+}
+
+.logo {
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    display: inline-block;
+    margin-right: 15px;
+}
+
+.menu a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.menu a:hover {
+    text-decoration: underline;
+}
+
+
+article {
+    max-width: 800px;
+    margin: 30px auto;
+    background-color: #ffffff;
+    padding: 25px;
+}
+
+article h1 {
+    color: #2c3e50;
+}
+
+article h2 {
+    color: #2c3e50;
+    margin-top: 30px;
+}
+
+article h3 {
+    color: #2c3e50;
+    margin-top: 20px;
+}
+
+article p {
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+article ul,
+article ol {
+    margin-bottom: 15px;
+    padding-left: 25px;
+}
+
+article li {
+    margin-bottom: 8px;
+}
+
+hr {
+    margin: 25px 0;
+}
+
+figure {
+    text-align: center;
+    margin: 20px 0;
+}
+
+figure img {
+    max-width: 100%;
+    height: auto;
+}
+
+figcaption {
+    font-size: 14px;
+    color: #666666;
+    margin-top: 5px;
+}
+
+.destaque {
+    background-color: #eaf2f8;
+    padding: 15px;
+    border-left: 4px solid #2c3e50;
+}
+
+code {
+    background-color: #eeeeee;
+    padding: 2px 5px;
+}
+
+
+.sobre-autor,
+.relacionados {
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    padding: 20px;
+}
+
+.relacionados ul {
+    padding-left: 20px;
+}
+
+.relacionados a {
+    color: #2c80b4;
+    text-decoration: none;
+}
+
+.relacionados a:hover {
+    text-decoration: underline;
+}
+
+
+footer {
+    background-color: #2c3e50;
+    color: #ffffff;
+    text-align: center;
+    padding: 15px;
+    margin-top: 30px;
+}
+
+.redes-sociais {
+    list-style: none;
+    padding: 0;
+}
+
+.redes-sociais li {
+    display: inline-block;
+    margin: 0 8px;
+}
+
+.redes-sociais a {
+    color: #ffffff;
+    text-decoration: none;
+}
