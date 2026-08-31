@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Pokédex — Mockup Desktop</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap');
+
+  :root{
+    --bg: #F6F7F1;
+    --surface: #FFFFFF;
+    --border: #E6E8DE;
+    --ink: #262A20;
+    --ink-soft: #8A8F80;
+    --coral: #EF6355;
+    --coral-soft: #FDEAE7;
+    --leaf-soft: #E8F4EA;
+    --sky: #5B8DEF;
+    --sky-soft: #EAF0FE;
+    --spark: #E8B84B;
+    --spark-soft: #FCF3DE;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);font-family:'Inter',sans-serif;color:var(--ink);}
+
+  /* ---- top nav ---- */
+  .navbar{
+    display:flex; align-items:center; gap:28px;
+    padding:16px 40px;
+    background:var(--surface);
+    border-bottom:1px solid var(--border);
+  }
+  .brand{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:17px; letter-spacing:0.02em;
+    border:1.5px solid var(--ink); padding:6px 14px; border-radius:10px; }
+  .nav-link{ font-size:13.5px; font-weight:600; color:var(--ink-soft); cursor:pointer; padding-bottom:4px; }
+  .nav-link.on{ color:var(--ink); border-bottom:2px solid var(--coral); }
+  .nav-right{ margin-left:auto; display:flex; align-items:center; gap:16px; }
+  .avatar{ width:28px; height:28px; border-radius:50%; background:var(--sky-soft); border:1.5px solid var(--sky); }
+  .user-greet{ font-size:13.5px; font-weight:600; }
+  .btn-ghost{ border:1px solid var(--border); background:var(--surface); padding:8px 16px; border-radius:10px; font-size:13px; font-weight:600; cursor:pointer; }
+
+  /* ---- screen tabs (dev-only helper, not part of the product UI) ---- */
+  .devtabs{ display:flex; gap:8px; padding:12px 40px; background:#EFF1E8; border-bottom:1px solid var(--border); }
+  .devtabs .t{ padding:7px 14px; border-radius:100px; font-size:12px; font-weight:600; color:var(--ink-soft); background:var(--surface); border:1px solid var(--border); cursor:pointer; }
+  .devtabs .t.active{ background:var(--ink); color:#fff; border-color:var(--ink); }
+
+  .screen{ display:none; }
+  .screen.active{ display:block; }
+
+  /* ---- LOGIN (centered card on desktop) ---- */
+  .login-wrap{ display:flex; justify-content:center; padding:70px 20px; }
+  .login-card{ width:400px; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:36px; }
+  .toggle-pill{ display:flex; background:var(--bg); border-radius:12px; padding:4px; margin-bottom:18px; }
+  .toggle-pill .opt{ flex:1; text-align:center; padding:8px; border-radius:9px; font-size:12.5px; font-weight:600; color:var(--ink-soft); cursor:pointer; }
+  .toggle-pill .opt.on{ background:var(--surface); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,0.06); }
+  h1{ font-family:'Space Grotesk',sans-serif; font-size:26px; margin:2px 0 4px; font-weight:700; }
+  .sub{ color:var(--ink-soft); font-size:13.5px; margin:0 0 4px; }
+  label{ display:block; font-size:12px; font-weight:600; color:var(--ink-soft); margin:16px 0 6px; }
+  input[type=text], input[type=email], input[type=password]{
+    width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--border);
+    background:var(--bg); font-family:'Inter',sans-serif; font-size:14px; color:var(--ink); outline:none;
+  }
+  input:focus{ border-color:var(--coral); }
+  .btn{ padding:13px; border-radius:12px; border:none; font-family:'Space Grotesk',sans-serif; font-weight:600; font-size:14px; cursor:pointer; }
+  .btn-primary{ width:100%; background:var(--coral); color:#fff; margin-top:18px; }
+  .btn-link{ width:100%; background:none; color:var(--ink-soft); text-align:center; font-size:12.5px; font-weight:500; margin-top:14px; }
+  .btn-link b{ color:var(--coral); }
+
+  /* ---- LISTA ---- */
+  .page{ padding:36px 40px 60px; max-width:1180px; margin:0 auto; }
+  .page-head{ display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:22px; }
+  .searchbar{ display:flex; gap:10px; margin-bottom:26px; }
+  .searchbar input{ flex:1; max-width:520px; }
+  .filter-chip{ padding:0 16px; border-radius:12px; border:1px solid var(--border); background:var(--surface);
+    font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; color:var(--ink-soft); }
+
+  .card-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+  .poke-card{ border:1px solid var(--border); border-radius:16px; padding:16px; background:var(--surface); position:relative; transition:box-shadow .15s; }
+  .poke-card:hover{ box-shadow:0 12px 24px -14px rgba(38,42,32,0.18); }
+  .poke-card img{ width:100%; height:110px; object-fit:contain; }
+  .fav-icon{ position:absolute; top:14px; right:14px; font-size:16px; color:#D8DBCC; }
+  .fav-icon.on{ color:var(--spark); }
+  .dex-no{ font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ink-soft); margin-top:8px; }
+  .poke-name{ font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:15px; margin:2px 0 8px; }
+  .type-tag{ display:inline-block; font-size:11px; font-weight:600; padding:3px 10px; border-radius:100px; margin-right:4px; }
+  .t-grass{ background:var(--leaf-soft); color:#4C8A5C; }
+  .t-fire{ background:var(--coral-soft); color:#C94A3B; }
+  .t-water{ background:var(--sky-soft); color:#3E68B8; }
+  .t-electric{ background:var(--spark-soft); color:#A9832A; }
+  .t-normal{ background:#EFEFE9; color:#8A8F80; }
+  .t-rock{ background:#EFE7DC; color:#96795A; }
+  .t-ground{ background:#F4E9D8; color:#A67C3D; }
+  .t-poison{ background:#F1E5F5; color:#9B4EAE; }
+
+  .pagination{ display:flex; justify-content:center; align-items:center; gap:8px; margin-top:34px; }
+  .pagination .p{ min-width:32px; height:32px; border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:600; color:var(--ink-soft); padding:0 10px; cursor:pointer; }
+  .pagination .p.on{ background:var(--ink); color:#fff; }
+  .pagination .p.nav{ border:1px solid var(--border); background:var(--surface); }
+
+  /* ---- DETALHES ---- */
+  .detail-grid{ display:grid; grid-template-columns:420px 1fr; gap:48px; align-items:start; }
+  .back{ font-size:13px; font-weight:600; color:var(--ink-soft); margin-bottom:20px; display:inline-block; cursor:pointer; }
+  .detail-hero{ background:linear-gradient(180deg, var(--sky-soft), var(--bg)); border-radius:22px; padding:40px; text-align:center; }
+  .detail-hero img{ width:260px; height:260px; object-fit:contain; }
+  .fav-btn{ display:inline-flex; align-items:center; gap:8px; border:1px solid var(--border); background:var(--surface);
+    padding:10px 20px; border-radius:12px; font-weight:600; font-size:13.5px; margin:14px 0 26px; cursor:pointer; }
+  .info-row{ display:flex; justify-content:space-between; padding:11px 0; border-bottom:1px solid var(--border); font-size:14px; max-width:420px; }
+  .info-row span:first-child{ color:var(--ink-soft); }
+  .info-row span:last-child{ font-weight:600; }
+  h2{ font-family:'Space Grotesk',sans-serif; font-size:19px; margin:26px 0 16px; font-weight:700; }
+  .stat-row{ display:flex; align-items:center; gap:14px; margin-bottom:12px; max-width:480px; }
+  .stat-label{ width:90px; font-size:13px; color:var(--ink-soft); font-weight:500; }
+  .stat-track{ flex:1; height:8px; background:var(--bg); border-radius:100px; overflow:hidden; }
+  .stat-fill{ height:100%; border-radius:100px; background:var(--coral); }
+  .stat-val{ width:30px; text-align:right; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--ink-soft); }
+
+  /* ---- FAVORITOS ---- */
+  .fav-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; max-width:760px; }
+  .fav-list-item{ display:flex; align-items:center; gap:14px; padding:14px; border:1px solid var(--border); border-radius:14px; background:var(--surface); }
+  .fav-list-item img{ width:56px; height:56px; object-fit:contain; background:var(--bg); border-radius:10px; padding:6px; }
+  .fav-list-item .meta{ flex:1; }
+  .remove-x{ color:var(--ink-soft); font-size:17px; cursor:pointer; }
+
+  .caption{ text-align:center; font-size:11.5px; color:var(--ink-soft); padding:18px; font-family:'JetBrains Mono',monospace; }
+</style>
+</head>
+<body>
+
+<div class="devtabs">
+  <div class="t active" data-target="login">Tela 01 · Login</div>
+  <div class="t" data-target="lista">Tela 02 · Lista</div>
+  <div class="t" data-target="detalhes">Tela 03 · Detalhes</div>
+  <div class="t" data-target="favoritos">Tela 04 · Favoritos</div>
+</div>
+
+<!-- ============ LOGIN ============ -->
+<div class="screen active" id="login">
+  <div class="login-wrap">
+    <div class="login-card">
+      <div class="toggle-pill">
+        <div class="opt on">Entrar</div>
+        <div class="opt">Criar conta</div>
+      </div>
+      <h1>Olá, treinador</h1>
+      <p class="sub">Entre para acessar seus favoritos.</p>
+      <label>E-mail</label>
+      <input type="email" placeholder="seuemail@exemplo.com">
+      <label>Senha</label>
+      <input type="password" placeholder="••••••••">
+      <button class="btn btn-primary">Entrar</button>
+      <button class="btn btn-link">Não tem conta? <b>Criar conta</b></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LISTA ============ -->
+<div class="screen" id="lista">
+  <div class="navbar">
+    <div class="brand">POKÉDEX</div>
+    <div class="nav-link on">Início</div>
+    <div class="nav-link">Favoritos</div>
+    <div class="nav-right">
+      <div class="avatar"></div>
+      <span class="user-greet">Olá, Ash</span>
+      <button class="btn-ghost">Sair</button>
+    </div>
+  </div>
+  <div class="page">
+    <div class="page-head">
+      <div>
+        <h1>Pokédex</h1>
+        <p class="sub">Explore todos os Pokémons em um só lugar.</p>
+      </div>
+    </div>
+    <div class="searchbar">
+      <input type="text" placeholder="Buscar por nome ou número...">
+      <div class="filter-chip">Filtrar por tipo ▾</div>
+    </div>
+
+    <div class="card-grid">
+      <div class="poke-card">
+        <span class="fav-icon">☆</span>
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png">
+        <div class="dex-no">#001</div>
+        <div class="poke-name">Bulbasaur</div>
+        <span class="type-tag t-grass">Grama</span><span class="type-tag t-poison">Veneno</span>
+      </div>
+      <div class="poke-card">
+        <span class="fav-icon">☆</span>
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png">
+        <div class="dex-no">#004</div>
+        <div class="poke-name">Charmander</div>
+        <span class="type-tag t-fire">Fogo</span>
+      </div>
+      <div class="poke-card">
+        <span class="fav-icon">☆</span>
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png">
+        <div class="dex-no">#007</div>
+        <div class="poke-name">Squirtle</div>
+        <span class="type-tag t-water">Água</span>
+      </div>
+      <div class="poke-card">
+        <span class="fav-icon on">★</span>
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png">
+        <div class="dex-no">#025</div>
+        <div class="poke-name">Pikachu</div>
+        <span class="type-tag t-electric">Elétrico</span>
+      </div>
+      <div class="poke-card">
+        <span class="fav-icon">☆</span>
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/39.png">
+        <div class="dex-no">#039</div>
+        <div class="poke-name">Jigglypuff</div>
+        <span class="type-tag t-normal">Normal</span>
+      </div>
+      <div class="poke-card">
+        <span class="fav-icon">☆</span>
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/52.png">
+        <div class="dex-no">#052</div>
+        <div class="poke-name">Meowth</div>
+        <span class="type-tag t-normal">Normal</span>
+      </div>
+      <div class="poke-card">
+        <span class="fav-icon">☆</span>
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/54.png">
+        <div class="dex-no">#054</div>
+        <div class="poke-name">Psyduck</div>
+        <span class="type-tag t-water">Água</span>
+      </div>
+      <div class="poke-card">
+        <span class="fav-icon on">★</span>
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/95.png">
+        <div class="dex-no">#095</div>
+        <div class="poke-name">Onix</div>
+        <span class="type-tag t-rock">Pedra</span><span class="type-tag t-ground">Terra</span>
+      </div>
+    </div>
+
+    <div class="pagination">
+      <div class="p nav">‹ Anterior</div>
+      <div class="p on">1</div>
+      <div class="p">2</div>
+      <div class="p">3</div>
+      <div class="p nav">Próximo ›</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ DETALHES ============ -->
+<div class="screen" id="detalhes">
+  <div class="navbar">
+    <div class="brand">POKÉDEX</div>
+    <div class="nav-link on">Início</div>
+    <div class="nav-link">Favoritos</div>
+    <div class="nav-right">
+      <div class="avatar"></div>
+      <span class="user-greet">Olá, Ash</span>
+      <button class="btn-ghost">Sair</button>
+    </div>
+  </div>
+  <div class="page">
+    <span class="back">‹ Voltar</span>
+    <div class="detail-grid">
+      <div class="detail-hero">
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png">
+      </div>
+      <div>
+        <span class="eyebrow" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink-soft);">#025</span>
+        <h1>Pikachu</h1>
+        <span class="type-tag t-electric">Elétrico</span>
+        <br>
+        <button class="fav-btn">☆ Favoritar</button>
+
+        <div class="info-row"><span>Altura</span><span>0,4 m</span></div>
+        <div class="info-row"><span>Peso</span><span>6,0 kg</span></div>
+        <div class="info-row" style="border-bottom:none;"><span>Habilidades</span><span>Static, Lightning Rod</span></div>
+
+        <h2>Status base</h2>
+        <div class="stat-row"><span class="stat-label">HP</span><div class="stat-track"><div class="stat-fill" style="width:35%"></div></div><span class="stat-val">35</span></div>
+        <div class="stat-row"><span class="stat-label">Ataque</span><div class="stat-track"><div class="stat-fill" style="width:55%"></div></div><span class="stat-val">55</span></div>
+        <div class="stat-row"><span class="stat-label">Defesa</span><div class="stat-track"><div class="stat-fill" style="width:40%"></div></div><span class="stat-val">40</span></div>
+        <div class="stat-row"><span class="stat-label">Atq. Especial</span><div class="stat-track"><div class="stat-fill" style="width:50%"></div></div><span class="stat-val">50</span></div>
+        <div class="stat-row"><span class="stat-label">Def. Especial</span><div class="stat-track"><div class="stat-fill" style="width:50%"></div></div><span class="stat-val">50</span></div>
+        <div class="stat-row"><span class="stat-label">Velocidade</span><div class="stat-track"><div class="stat-fill" style="width:90%"></div></div><span class="stat-val">90</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FAVORITOS ============ -->
+<div class="screen" id="favoritos">
+  <div class="navbar">
+    <div class="brand">POKÉDEX</div>
+    <div class="nav-link">Início</div>
+    <div class="nav-link on">Favoritos</div>
+    <div class="nav-right">
+      <div class="avatar"></div>
+      <span class="user-greet">Olá, Ash</span>
+      <button class="btn-ghost">Sair</button>
+    </div>
+  </div>
+  <div class="page">
+    <h1>Favoritos</h1>
+    <p class="sub">Seus Pokémons salvos, sempre à mão.</p>
+    <div class="fav-grid">
+      <div class="fav-list-item">
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png">
+        <div class="meta"><div class="dex-no">#025</div><div class="poke-name" style="margin:0;">Pikachu</div></div>
+        <span class="remove-x">✕</span>
+      </div>
+      <div class="fav-list-item">
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/95.png">
+        <div class="meta"><div class="dex-no">#095</div><div class="poke-name" style="margin:0;">Onix</div></div>
+        <span class="remove-x">✕</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="caption">Mockup de alta fidelidade — layout desktop · baseado no wireframe da Entrega 01</div>
+
+<script>
+  document.querySelectorAll('.devtabs .t').forEach(tab=>{
+    tab.addEventListener('click', ()=>{
+      document.querySelectorAll('.devtabs .t').forEach(t=>t.classList.remove('active'));
+      document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(tab.dataset.target).classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>
