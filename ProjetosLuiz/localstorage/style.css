@@ -1,0 +1,25 @@
+@charset "UTF-8";
+
+body {
+    text-align: center;
+    padding-top: 100px;
+    font-family: Arial, sans-serif;
+}
+
+button:hover {
+    color: darkblue;
+}
+
+ul {
+    text-align: center;
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    margin-top: 10px;
+}
+
+li button {
+    margin-left: 10px;
+}
