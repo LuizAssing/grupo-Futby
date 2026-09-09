@@ -31,10 +31,6 @@
    -------------------------- */
 
 body{
-    margin: 5px;
-    min-height: 100vh;
-}
-body{
     display: flex;  
     flex-direction: column;
     min-height: 100vh;
@@ -42,6 +38,8 @@ body{
     border: 5px solid black;
     padding: 8px;
     border-radius: 15px;
+    margin: 5px;
+    min-height: 100vh;
 }
 header {
     display: flex;    
@@ -85,8 +83,8 @@ img{
     justify-content: center;
     border: 2px solid black;
     border-radius: 15px;
-    background-color: lightgray;
     height: 25px;
+    box-shadow: 3px 3px 5px 1px rgba(40, 40, 40, 0.43);
 }
 .scoup{
     display: flex;
