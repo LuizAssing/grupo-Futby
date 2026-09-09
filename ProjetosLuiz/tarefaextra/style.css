@@ -1,0 +1,132 @@
+
+/* ---- minhas respostas ----
+
+1) No .top o eixo principal é o horizontal, porque flex sem flex-direction
+   já vem como row. No main eu botei flex-direction: column, então ali o
+   eixo principal é o vertical. Ficaram diferentes de propósito: no topo eu
+   quero logo e menu lado a lado, e no main eu quero topo, cards e footer
+   um embaixo do outro.
+
+2) Se eu uso width: 280px o card fica preso nesse tamanho e não se mexe.
+   Com flex: 1 1 280px o 280 é só o ponto de partida: o card pode crescer
+   pra fechar a linha, encolher quando falta espaço e ainda pular pra linha
+   de baixo no wrap. Um é fixo, o outro se adapta.
+
+3) Se eu trocar flex-wrap: wrap por nowrap os cards param de quebrar linha
+   e ficam todos espremidos numa fila só.
+
+4) Se eu tirar o align-items: center do topo, o logo e o menu deixam de
+   ficar centralizados na vertical e sobem pro topo da barra (o padrão
+   passa a ser stretch/início), aí o menu fica desalinhado do logo.
+
+5) Eu não cheguei a usar order. Mas se eu usasse pra trocar a ordem visual
+   (tipo inverter logo e menu, ou os itens do footer), quem usa teclado ou
+   leitor de tela ia continuar seguindo a ordem do HTML, então o foco ia
+   pular de um canto pro outro sem seguir o que aparece na tela.
+
+6) Sobre o flex-basis: eu tinha deixado 280px, mas com 6 cards eles não
+   cabiam na mesma linha e ficavam quebrando. Tirei o 280 pra base ficar
+   pequena, assim os 6 dividem a largura por igual e ficam todos numa
+   linha só (e continuam se ajustando quando eu diminuo a janela).
+   -------------------------- */
+
+body{
+    margin: 5px;
+    min-height: 100vh;
+}
+main{
+    display: flex;  
+    flex-direction: column;
+    min-height: 100vh;
+    gap: 15px;
+    border: 5px solid black;
+    padding: 8px;
+    border-radius: 15px;
+}
+.top {
+    display: flex;    
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px;
+    gap: 16px;
+    background-color: rgba(211, 211, 211, 0.318);
+    flex-wrap: wrap; 
+    border: 2px solid black;
+    border-radius: 25px;   
+}
+.menu{
+    display: flex;
+    gap: 24px;
+}
+li{
+        list-style-type: none;
+}
+li:hover{
+    color: red;
+}
+img{
+    width: 100px;
+    height: 70px;
+    flex-shrink: 0;
+}
+#entrar{
+    background-color: rgb(83, 187, 83);
+    border-radius: 7px;
+    padding: 10px;
+    border: 2px solid black;
+}
+.opcoes{
+    display: flex;
+    align-items: center;
+}
+.cards{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid black;
+    border-radius: 15px;
+    background-color: lightgray;
+    height: 25px;
+}
+.scoup{
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding: 16px 24px;
+    border: 3px solid black;
+    border-radius: 10px;
+}
+.scoup > .cards{
+    /* tirei o 280px daqui: com 6 cards a base de 280 nao cabia tudo numa
+       linha e ficava quebrando feio. sem ela os 6 dividem a largura igual */
+    flex: 1 1;
+}
+footer{
+    justify-content: space-between;
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+    padding: 25px;
+    border: 3px solid black;
+    border-radius: 25px;
+    
+}
+.listaesquerda{
+    display: flex;
+    gap: 20px;
+    padding: 0;
+}
+.cards{
+    background-color: rgba(94, 139, 99, 0.462);
+}
+.cards:hover{
+    background-color: lightgreen;
+}
+.cards.destaque{
+    flex-grow: 2;
+    background-color: rgba(186, 86, 86, 0.395);
+}
+.cards.destaque:hover{
+    background-color: rgba(255, 0, 0, 0.763);
+}
