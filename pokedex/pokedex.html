@@ -88,5 +88,143 @@
   </section>
 
   <!-- ============ DETALHES ============ -->
-  </body>
+  <section class="screen" id="detalhes" aria-label="Detalhes do Pokémon" hidden>
+  <header class="navbar">
+    <div class="brand">
+      POKÉDEX
+    </div>
+
+    <nav>
+      <button type="button" class="nav-link" data-nav="lista">
+        Início
+      </button>
+      <button type="button" class="nav-link" data-nav="favoritos">
+        Favoritos
+      </button>
+    </nav>
+
+    <div class="nav-right">
+      <div class="avatar"></div>
+      <span class="user-greet">Olá, Ash</span>
+      <button type="button" class="btn-ghost" data-nav="login">
+        Sair
+      </button>
+    </div>
+  </header>
+
+  <main class="page">
+    <button type="button" class="back" id="backBtn">
+      ‹ Voltar
+    </button>
+
+    <article class="detail-grid">
+      <figure class="detail-hero">
+        <img id="detailImg" src="" alt="">
+      </figure>
+
+      <div>
+        <span class="eyebrow" id="detailNo"></span>
+        <h1 id="detailName"></h1>
+        <span id="detailTypes"></span>
+        <br>
+        <button type="button" class="fav-btn" id="detailFavBtn">
+          ☆ Favoritar
+        </button>
+
+        <dl class="info-row">
+          <dt>Altura</dt>
+          <dd id="detailHeight"></dd>
+        </dl>
+        <dl class="info-row">
+          <dt>Peso</dt>
+          <dd id="detailWeight"></dd>
+        </dl>
+        <dl class="info-row info-row-last">
+          <dt>Habilidades</dt>
+          <dd id="detailAbilities"></dd>
+        </dl>
+
+        <h2>Status base</h2>
+
+        <div class="stat-row">
+          <span class="stat-label">HP</span>
+          <div class="stat-track">
+            <div class="stat-fill" id="statHp"></div>
+          </div>
+          <span class="stat-val" id="statHpVal"></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Ataque</span>
+          <div class="stat-track">
+            <div class="stat-fill" id="statAtk"></div>
+          </div>
+          <span class="stat-val" id="statAtkVal"></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Defesa</span>
+          <div class="stat-track">
+            <div class="stat-fill" id="statDef"></div>
+          </div>
+          <span class="stat-val" id="statDefVal"></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Atq. Especial</span>
+          <div class="stat-track">
+            <div class="stat-fill" id="statSpAtk"></div>
+          </div>
+          <span class="stat-val" id="statSpAtkVal"></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Def. Especial</span>
+          <div class="stat-track">
+            <div class="stat-fill" id="statSpDef"></div>
+          </div>
+          <span class="stat-val" id="statSpDefVal"></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Velocidade</span>
+          <div class="stat-track">
+            <div class="stat-fill" id="statSpeed"></div>
+          </div>
+          <span class="stat-val" id="statSpeedVal"></span>
+        </div>
+      </div>
+    </article>
+  </main>
+</section>
+
+<!-- ============ FAVORITOS ============ -->
+<section class="screen" id="favoritos" aria-label="Favoritos" hidden>
+  <header class="navbar">
+    <div class="brand">
+      POKÉDEX
+    </div>
+
+    <nav>
+      <button type="button" class="nav-link" data-nav="lista">
+        Início
+      </button>
+      <button type="button" class="nav-link on" data-nav="favoritos">
+        Favoritos
+      </button>
+    </nav>
+
+    <div class="nav-right">
+      <div class="avatar"></div>
+      <span class="user-greet">Olá, Ash</span>
+      <button type="button" class="btn-ghost" data-nav="login">
+        Sair
+      </button>
+    </div>
+  </header>
+
+  <main class="page">
+    <h1>Favoritos</h1>
+    <p class="sub">Seus Pokémons salvos, sempre à mão.</p>
+    <ul class="fav-grid" id="favGrid"></ul>
+  </main>
+</section>
+
+<script src="script.js"></script>
+</body>
 </html>

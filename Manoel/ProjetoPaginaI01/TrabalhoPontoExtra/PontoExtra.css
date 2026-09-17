@@ -1,0 +1,90 @@
+.topo{
+display: flex;
+align-items: center;
+justify-content: space-between;
+flex-wrap: wrap;
+border-radius: 20px;
+background-color: #123262;
+color: #FFFFFF;
+
+
+}
+
+.logo{
+    flex-shrink: 0;
+}
+
+.logo img{
+    width: 100px;
+    border-radius: 30px;
+}
+
+.menu{
+
+    display: flex;
+    justify-content: flex-end;
+    gap: 24px;
+}
+
+.menu button{
+    background-color: #FFFFFF;
+    color: #123262;
+    border-radius: 15px;
+}
+
+.destaque{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #2E9E5B;
+    color: #FFFFFF;
+    height: 70px;
+    border-radius: 20px;
+}
+
+.grade{
+display: flex;
+align-items: center;
+gap: 24px;
+flex-wrap: wrap;
+flex: 1;
+
+}
+
+.card{
+    display: flex;
+    flex: 1 1 280px;
+    border-radius: 20px;
+    background-color: #FFFFFF;
+    padding: 24px;
+
+}
+
+.rodape{
+    background-color: #123262;
+    color: #FFFFFF;
+}
+
+body{
+    flex-direction: column;
+    display: flex;
+    min-height: 100vh;
+    background-color: #123262;
+
+}
+/*
+1. Qual é o eixo principal do .topo e qual é o do body? Por que eles são diferentes?
+R: no .topo eh flex-direction row horizontal e em body eh flex-direction column vertical, o eixo do .topo eh organizar logo e menuzinho e o body empilha header footer etc. 
+
+2. Por que flex: 1 1 280px dá resultado diferente de width: 280px nos cards?
+R: Porque o flex nao eh fixo como o width, os cards travam em 280px com width, diferente do felx que ajusta
+
+3. O que acontece com a grade se você trocar flex-wrap: wrap por nowrap?
+R: os cards ou as informacoes seriam jogadas pra fora da tela ou espremidos ate caber na tela.
+
+4. Se o align-items: center do topo for removido, o que muda na tela e por quê?
+R: 
+
+5. Onde, na sua solução, o order pode atrapalhar quem navega por teclado?
+R: 
+*/
