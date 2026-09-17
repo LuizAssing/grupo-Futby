@@ -1,12 +1,92 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="pokedexStyle.css">
+  <meta charset="UTF-8">
+  <title>Pokédex</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
-</body>
+
+  <!-- ============ LOGIN ============ -->
+  <section class="screen" id="login" aria-label="Login">
+    <main class="login-wrap">
+      <div class="login-card">
+        <div class="toggle-pill" role="tablist">
+          <button type="button" class="opt on" id="tabEntrar" role="tab" aria-selected="true">
+            Entrar
+          </button>
+          <button type="button" class="opt" id="tabCriarConta" role="tab" aria-selected="false">
+            Criar conta
+          </button>
+        </div>
+
+        <h1 id="loginTitle">Olá, treinador</h1>
+        <p class="sub" id="loginSub">Entre para acessar seus favoritos.</p>
+
+        <form>
+          <label for="loginEmail">E-mail</label>
+          <input type="email" id="loginEmail" placeholder="seuemail@exemplo.com">
+
+          <label for="loginSenha">Senha</label>
+          <input type="password" id="loginSenha" placeholder="••••••••">
+
+          <button type="button" class="btn btn-primary" id="btnEntrar">
+            Entrar
+          </button>
+        </form>
+
+        <button type="button" class="btn btn-link" id="btnCriarConta">
+          Não tem conta? <b>Criar conta</b>
+        </button>
+      </div>
+    </main>
+  </section>
+
+  <!-- ============ LISTA ============ -->
+  <section class="screen" id="lista" aria-label="Lista de Pokémon" hidden>
+    <header class="navbar">
+      <div class="brand">
+        POKÉDEX
+      </div>
+
+      <nav>
+        <button type="button" class="nav-link on" data-nav="lista">
+          Início
+        </button>
+        <button type="button" class="nav-link" data-nav="favoritos">
+          Favoritos
+        </button>
+      </nav>
+
+      <div class="nav-right">
+        <div class="avatar"></div>
+        <span class="user-greet">Olá, Ash</span>
+        <button type="button" class="btn-ghost" data-nav="login">
+          Sair
+        </button>
+      </div>
+    </header>
+
+    <main class="page">
+      <div class="page-head">
+        <div>
+          <h1>Pokédex</h1>
+          <p class="sub">Explore todos os Pokémons em um só lugar.</p>
+        </div>
+      </div>
+
+      <div class="searchbar">
+        <label for="buscaPokemon" class="sr-only">Buscar por nome ou número</label>
+        <input type="text" id="buscaPokemon" placeholder="Buscar por nome ou número...">
+        <div class="filter-chip">
+          Filtrar por tipo ▾
+        </div>
+      </div>
+
+      <ul class="card-grid" id="cardGrid"></ul>
+    </main>
+  </section>
+
+  <!-- ============ DETALHES ============ -->
+  </body>
 </html>
