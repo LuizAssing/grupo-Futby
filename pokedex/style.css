@@ -38,7 +38,6 @@ body {
   border: 0;
 }
 
-/* reset so semantic <button>s can reuse the class-based styling below */
 button {
   font: inherit;
   color: inherit;
@@ -113,7 +112,7 @@ button {
   cursor: pointer;
 }
 
-/* ---- LOGIN (centered card on desktop) ---- */
+/* ---- LOGIN ---- */
 .login-wrap {
   display: flex;
   justify-content: center;
