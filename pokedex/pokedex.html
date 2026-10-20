@@ -78,12 +78,36 @@
       <div class="searchbar">
         <label for="buscaPokemon" class="sr-only">Buscar por nome ou número</label>
         <input type="text" id="buscaPokemon" placeholder="Buscar por nome ou número...">
-        <div class="filter-chip">
-          Filtrar por tipo ▾
-        </div>
+        <select id="filtroTipo" class="filter-chip" aria-label="Filtrar por tipo">
+          <option value="">Todos os tipos</option>
+          <option value="grass">Grama</option>
+          <option value="fire">Fogo</option>
+          <option value="water">Água</option>
+          <option value="electric">Elétrico</option>
+          <option value="bug">Inseto</option>
+          <option value="normal">Normal</option>
+          <option value="poison">Veneno</option>
+          <option value="ground">Terra</option>
+          <option value="rock">Pedra</option>
+          <option value="psychic">Psíquico</option>
+          <option value="fighting">Lutador</option>
+          <option value="ghost">Fantasma</option>
+          <option value="ice">Gelo</option>
+          <option value="dragon">Dragão</option>
+          <option value="fairy">Fada</option>
+          <option value="steel">Aço</option>
+          <option value="flying">Voador</option>
+        </select>
       </div>
 
+      <div id="statusMsg" class="status-msg" hidden></div>
       <ul class="card-grid" id="cardGrid"></ul>
+
+      <div class="load-more-wrap" id="loadMoreWrap">
+        <button type="button" class="btn-load-more" id="btnCarregarMais">
+          Carregar mais Pokémons
+        </button>
+      </div>
     </main>
   </section>
 
