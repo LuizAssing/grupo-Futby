@@ -418,6 +418,43 @@ select.filter-chip:focus {
   color: #9B4EAE;
 }
 
+.t-bug {
+  background: #EBF2D6;
+  color: #728D2B;
+}
+.t-ghost {
+  background: #E8E5F2;
+  color: #60528B;
+}
+.t-steel {
+  background: #E5EBF0;
+  color: #567389;
+}
+.t-psychic {
+  background: #FCE8EE;
+  color: #C73E67;
+}
+.t-ice {
+  background: #E4F5F6;
+  color: #388E9C;
+}
+.t-dragon {
+  background: #ECE5F9;
+  color: #5D37B5;
+}
+.t-fighting {
+  background: #F8E7E5;
+  color: #B53F33;
+}
+.t-flying {
+  background: #EAF0FE;
+  color: #4A6EBC;
+}
+.t-fairy {
+  background: #FCEBF4;
+  color: #B9467F;
+}
+
 .pagination {
   display: flex;
   justify-content: center;
