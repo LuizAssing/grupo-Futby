@@ -1,0 +1,615 @@
+/* =========================================================
+   ESTILOS - Wd decorações
+   Abordagem mobile-first: primeiro escrevemos o estilo para
+   celular; depois, com @media (min-width: ...), ajustamos
+   para telas maiores (tablet 768px e desktop 1280px).
+   ========================================================= */
+
+/* ---------- VARIÁVEIS (paleta e medidas reutilizáveis) ---------- */
+:root {
+  /* Cores: azul petróleo + cinza + branco */
+  --cor-primaria: #0f4c5c;        /* azul petróleo */
+  --cor-primaria-escura: #0a3642; /* petróleo mais escuro (hover, rodapé) */
+  --cor-cinza-claro: #f1f3f4;     /* fundo de seções alternadas */
+  --cor-cinza-medio: #d5dadd;     /* bordas */
+  --cor-cinza-texto: #4a5358;     /* textos secundários */
+  --cor-texto: #1e2629;           /* texto principal */
+  --cor-branco: #ffffff;
+  --cor-erro: #b3261e;            /* mensagens de erro */
+  --cor-sucesso: #1e6b3a;         /* mensagem de sucesso */
+  --cor-whatsapp: #1f8f4e;        /* verde escuro o bastante para contraste com ícone branco */
+
+  /* Fontes */
+  --fonte-titulo: "Montserrat", Arial, sans-serif;
+  --fonte-texto: "Open Sans", Arial, sans-serif;
+
+  /* Medidas */
+  --altura-header: 64px;
+  --raio: 8px;
+  --sombra: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- RESET BÁSICO ---------- */
+/* box-sizing: border-box faz padding e borda contarem dentro da largura */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--fonte-texto);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--cor-texto);
+  background-color: var(--cor-branco);
+}
+
+img {
+  max-width: 100%;  /* imagem nunca passa da largura do container */
+  height: auto;
+  display: block;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  color: var(--cor-primaria);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fonte-titulo);
+  line-height: 1.25;
+}
+
+/* Contorno visível ao navegar pelo teclado (acessibilidade) */
+:focus-visible {
+  outline: 3px solid var(--cor-primaria);
+  outline-offset: 2px;
+}
+
+/* ---------- CONTAINER (limita a largura do conteúdo) ---------- */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.container--estreito {
+  max-width: 720px;
+}
+
+/* ---------- BOTÃO PADRÃO ---------- */
+.botao {
+  display: inline-block;
+  padding: 0.9rem 1.6rem;
+  border: none;
+  border-radius: var(--raio);
+  background-color: var(--cor-primaria);
+  color: var(--cor-branco);
+  font-family: var(--fonte-titulo);
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.botao:hover {
+  background-color: var(--cor-primaria-escura);
+}
+
+.botao--largo {
+  width: 100%;
+}
+
+/* =========================================================
+   1. HEADER FIXO
+   ========================================================= */
+.header {
+  position: fixed; /* fica preso no topo ao rolar */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--altura-header);
+  background-color: var(--cor-branco);
+  box-shadow: var(--sombra);
+  z-index: 100; /* fica por cima do restante da página */
+}
+
+.header__conteudo {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.4rem;
+  color: var(--cor-primaria);
+  text-decoration: none;
+}
+
+.logo span {
+  font-weight: 600;
+  color: var(--cor-cinza-texto);
+}
+
+/* Botão hambúrguer (3 linhas) */
+.menu-botao {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.menu-botao__linha {
+  width: 26px;
+  height: 3px;
+  background-color: var(--cor-primaria);
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+}
+
+/* Quando o menu está aberto, as 3 linhas viram um "X" */
+.menu-botao[aria-expanded="true"] .menu-botao__linha:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+.menu-botao[aria-expanded="true"] .menu-botao__linha:nth-child(2) {
+  opacity: 0;
+}
+.menu-botao[aria-expanded="true"] .menu-botao__linha:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Menu no celular: escondido, aparece abaixo do header quando tem a classe "aberto" */
+.menu {
+  display: none;
+  position: absolute;
+  top: var(--altura-header);
+  left: 0;
+  width: 100%;
+  background-color: var(--cor-branco);
+  box-shadow: var(--sombra);
+}
+
+.menu.aberto {
+  display: block;
+}
+
+.menu__link {
+  display: block;
+  padding: 0.9rem 1rem;
+  color: var(--cor-texto);
+  text-decoration: none;
+  font-weight: 600;
+  border-top: 1px solid var(--cor-cinza-claro);
+}
+
+.menu__link:hover {
+  color: var(--cor-primaria);
+}
+
+.menu__link--destaque {
+  color: var(--cor-primaria);
+}
+
+/* =========================================================
+   2. HERO
+   ========================================================= */
+.hero {
+  /* padding-top compensa a altura do header fixo */
+  padding: calc(var(--altura-header) + 4rem) 0 4rem;
+  background-color: var(--cor-primaria);
+  color: var(--cor-branco);
+  text-align: center;
+}
+
+.hero__titulo {
+  font-size: 1.9rem;
+  margin-bottom: 1rem;
+}
+
+.hero__subtitulo {
+  font-size: 1.05rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+/* No hero (fundo escuro) o botão é branco para se destacar */
+.hero .botao {
+  background-color: var(--cor-branco);
+  color: var(--cor-primaria);
+}
+
+.hero .botao:hover {
+  background-color: var(--cor-cinza-claro);
+}
+
+/* =========================================================
+   SEÇÕES (estilo comum)
+   ========================================================= */
+.secao {
+  padding: 4rem 0;
+  /* Ao pular para a seção pelo menu, desconta a altura do header fixo */
+  scroll-margin-top: var(--altura-header);
+}
+
+.secao--cinza {
+  background-color: var(--cor-cinza-claro);
+}
+
+.secao__titulo {
+  font-size: 1.6rem;
+  color: var(--cor-primaria);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+/* Subtítulo sobe para ficar logo abaixo do título */
+.secao__subtitulo {
+  text-align: center;
+  color: var(--cor-cinza-texto);
+  margin-top: -1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Grade genérica: 1 coluna no celular (colunas extras nas media queries) */
+.grade {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+/* =========================================================
+   3. SERVIÇOS (cards)
+   ========================================================= */
+.card {
+  padding: 1.5rem;
+  background-color: var(--cor-branco);
+  border: 1px solid var(--cor-cinza-medio);
+  border-top: 4px solid var(--cor-primaria);
+  border-radius: var(--raio);
+}
+
+.card__titulo {
+  font-size: 1.15rem;
+  color: var(--cor-primaria);
+  margin-bottom: 0.5rem;
+}
+
+/* =========================================================
+   4. DIFERENCIAIS
+   ========================================================= */
+.diferencial {
+  padding: 1.5rem;
+  background-color: var(--cor-branco);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  text-align: center;
+}
+
+.diferencial__titulo {
+  font-size: 1.1rem;
+  color: var(--cor-primaria);
+  margin-bottom: 0.4rem;
+}
+
+/* =========================================================
+   5. COMO FUNCIONA (etapas)
+   ========================================================= */
+.etapas {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+.etapa {
+  text-align: center;
+}
+
+/* Círculo com o número da etapa */
+.etapa__numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 0.75rem;
+  border-radius: 50%;
+  background-color: var(--cor-primaria);
+  color: var(--cor-branco);
+  font-family: var(--fonte-titulo);
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.etapa__titulo {
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+
+/* =========================================================
+   6. DEPOIMENTOS
+   ========================================================= */
+.depoimento {
+  padding: 1.5rem;
+  background-color: var(--cor-branco);
+  border-left: 4px solid var(--cor-primaria);
+  border-radius: var(--raio);
+}
+
+.depoimento blockquote {
+  font-style: italic;
+  margin-bottom: 0.75rem;
+}
+
+.depoimento__autor {
+  font-weight: 600;
+  color: var(--cor-cinza-texto);
+}
+
+/* =========================================================
+   7. FAQ (accordion)
+   ========================================================= */
+.faq__item {
+  background-color: var(--cor-branco);
+  border: 1px solid var(--cor-cinza-medio);
+  border-radius: var(--raio);
+  margin-bottom: 0.75rem;
+}
+
+.faq__pergunta {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: none;
+  border: none;
+  text-align: left;
+  font-family: var(--fonte-titulo);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--cor-texto);
+  cursor: pointer;
+}
+
+/* Sinal de "+" ao lado da pergunta; vira "−" quando aberta */
+.faq__pergunta::after {
+  content: "+";
+  font-size: 1.4rem;
+  color: var(--cor-primaria);
+}
+
+.faq__pergunta[aria-expanded="true"]::after {
+  content: "−";
+}
+
+.faq__resposta {
+  padding: 0 1rem 1rem;
+  color: var(--cor-cinza-texto);
+}
+
+/* =========================================================
+   8. FORMULÁRIO
+   ========================================================= */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.campo label {
+  font-weight: 600;
+}
+
+.campo input,
+.campo select,
+.campo textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--cor-cinza-medio);
+  border-radius: var(--raio);
+  font-family: inherit;
+  font-size: 1rem; /* 16px evita zoom automático no iPhone */
+  color: var(--cor-texto);
+  background-color: var(--cor-branco);
+}
+
+.campo textarea {
+  resize: vertical;
+}
+
+/* Campo com erro: borda vermelha (a classe é colocada pelo JavaScript) */
+.campo--invalido input,
+.campo--invalido select {
+  border-color: var(--cor-erro);
+}
+
+.campo__erro {
+  font-size: 0.875rem;
+  color: var(--cor-erro);
+  min-height: 1.2em; /* reserva espaço para a página não "pular" */
+}
+
+.formulario__sucesso {
+  padding: 1rem;
+  border-radius: var(--raio);
+  background-color: #e6f4ea;
+  color: var(--cor-sucesso);
+  font-weight: 600;
+  text-align: center;
+}
+
+/* =========================================================
+   9. RODAPÉ
+   ========================================================= */
+.rodape {
+  background-color: var(--cor-primaria-escura);
+  color: var(--cor-branco);
+  padding-top: 3rem;
+}
+
+.rodape a {
+  color: var(--cor-branco);
+}
+
+.rodape .logo,
+.rodape .logo span {
+  color: var(--cor-branco);
+}
+
+.rodape__conteudo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+.rodape__titulo {
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+}
+
+.rodape__contato {
+  font-style: normal; /* <address> vem em itálico por padrão */
+}
+
+.rodape__redes li {
+  margin-bottom: 0.3rem;
+}
+
+.rodape__direitos {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+/* =========================================================
+   BOTÃO FLUTUANTE DO WHATSAPP
+   ========================================================= */
+.whatsapp {
+  position: fixed; /* fica fixo no canto da tela */
+  right: 1rem;
+  bottom: 1rem;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: var(--cor-whatsapp);
+  color: var(--cor-branco);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  z-index: 90;
+  transition: transform 0.2s;
+}
+
+.whatsapp:hover {
+  transform: scale(1.08);
+}
+
+/* =========================================================
+   TABLET (a partir de 768px)
+   ========================================================= */
+@media (min-width: 768px) {
+  .hero__titulo {
+    font-size: 2.6rem;
+  }
+
+  .secao__titulo {
+    font-size: 2rem;
+  }
+
+  /* Grades passam para 2 colunas */
+  .grade--3,
+  .grade--4,
+  .etapas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .rodape__conteudo {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* =========================================================
+   DESKTOP (a partir de 1024px)
+   Menu deixa de ser hambúrguer e fica em linha no header.
+   ========================================================= */
+@media (min-width: 1024px) {
+  .menu-botao {
+    display: none; /* esconde o hambúrguer */
+  }
+
+  .menu {
+    display: block;
+    position: static;
+    width: auto;
+    box-shadow: none;
+  }
+
+  .menu__lista {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .menu__link {
+    padding: 0.5rem 0.75rem;
+    border-top: none;
+  }
+
+  /* Link "Orçamento" vira um botão no desktop */
+  .menu__link--destaque {
+    margin-left: 0.5rem;
+    background-color: var(--cor-primaria);
+    color: var(--cor-branco);
+    border-radius: var(--raio);
+  }
+
+  .menu__link--destaque:hover {
+    background-color: var(--cor-primaria-escura);
+    color: var(--cor-branco);
+  }
+
+  .hero {
+    padding: calc(var(--altura-header) + 6rem) 0 6rem;
+  }
+
+  .hero__titulo {
+    font-size: 3rem;
+  }
+
+  /* Grades com mais colunas */
+  .grade--3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .grade--4,
+  .etapas {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
