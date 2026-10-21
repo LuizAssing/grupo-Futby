@@ -273,6 +273,43 @@ select.filter-chip {
   color: var(--ink);
 }
 
+select.filter-chip:focus {
+  border-color: var(--coral);
+}
+.status-msg {
+  text-align: center;
+  padding: 36px 16px;
+  color: var(--ink-soft);
+  font-size: 15px;
+  font-weight: 500;
+}
+.load-more-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 32px;
+}
+.btn-load-more {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1.5px solid var(--border);
+  padding: 12px 28px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Space Grotesk', sans-serif;
+}
+.btn-load-more:hover:not(:disabled) {
+  border-color: var(--coral);
+  color: var(--coral);
+  transform: translateY(-2px);
+}
+.btn-load-more:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .card-grid {
   list-style: none;
   margin: 0;
