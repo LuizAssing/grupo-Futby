@@ -124,25 +124,40 @@ function getFilteredPokemons() {
   const selectedType = typeSelect ? typeSelect.value : '';
 
   const cleanSearch = searchTerm.replace(/^#/, '');
-  return pokemons.filter(p => {
 
+  return pokemons.filter(p => {
+    // Busca por texto: confere nome ou número
     const matchesName = p.name.toLowerCase().includes(cleanSearch);
     const matchesNumber = String(p.id).includes(cleanSearch) ||
       String(p.id).padStart(3, '0').includes(cleanSearch);
     const matchesSearch = !cleanSearch || matchesName || matchesNumber;
+
+    const matchesType = !selectedType || p.types.some(t => t.type.name === selectedType);
+    return matchesSearch && matchesType;
+  });
+}
+function renderList() {
+  const filtered = getFilteredPokemons();
+  const cardGrid = document.getElementById('cardGrid');
+  if (filtered.length === 0) {
+    cardGrid.innerHTML = '<li class="sub" style="grid-column: 1 / -1; text-align: center; padding: 40px 16px;">Nenhum Pokémon encontrado.</li>';
+    return;
   }
+  cardGrid.innerHTML = filtered.map(cardHtml).join('');
+}
+
 
 function renderFavorites() {
-      const favPokemons = pokemons.filter(p => favorites.has(p.id));
-      const grid = document.getElementById('favGrid');
+  const favPokemons = pokemons.filter(p => favorites.has(p.id));
+  const grid = document.getElementById('favGrid');
 
-      if (favPokemons.length === 0) {
-        grid.innerHTML = '<li class="sub">Você ainda não favoritou nenhum Pokémon.</li>';
-        return;
-      }
+  if (favPokemons.length === 0) {
+    grid.innerHTML = '<li class="sub">Você ainda não favoritou nenhum Pokémon.</li>';
+    return;
+  }
 
-      grid.innerHTML = favPokemons
-        .map(p => `
+  grid.innerHTML = favPokemons
+    .map(p => `
       <li class="fav-list-item" data-id="${p.id}">
         <img src="${artworkUrl(p)}" alt="${capitalize(p.name)}">
         <div class="meta">
@@ -151,119 +166,128 @@ function renderFavorites() {
         </div>
         <button type="button" class="remove-x" data-fav="${p.id}" aria-label="Remover ${capitalize(p.name)} dos favoritos">✕</button>
       </li>`)
-        .join('');
-    }
+    .join('');
+}
 
 function renderDetail(id) {
-      const p = findPokemon(id);
-      if (!p) return;
+  const p = findPokemon(id);
+  if (!p) return;
 
-      currentDetailId = id;
-      document.getElementById('detailImg').src = artworkUrl(p);
-      document.getElementById('detailImg').alt = capitalize(p.name);
-      document.getElementById('detailNo').textContent = '#' + String(p.id).padStart(3, '0');
-      document.getElementById('detailName').textContent = capitalize(p.name);
-      document.getElementById('detailTypes').innerHTML = typesHtml(p);
-      // height/weight vêm da API em decímetros/hectogramas.
-      document.getElementById('detailHeight').textContent = (p.height / 10).toString().replace('.', ',') + ' m';
-      document.getElementById('detailWeight').textContent = (p.weight / 10).toString().replace('.', ',') + ' kg';
-      document.getElementById('detailAbilities').textContent = p.abilities.map(a => capitalize(a.ability.name)).join(', ');
-      updateFavBtn();
+  currentDetailId = id;
+  document.getElementById('detailImg').src = artworkUrl(p);
+  document.getElementById('detailImg').alt = capitalize(p.name);
+  document.getElementById('detailNo').textContent = '#' + String(p.id).padStart(3, '0');
+  document.getElementById('detailName').textContent = capitalize(p.name);
+  document.getElementById('detailTypes').innerHTML = typesHtml(p);
+  // height/weight vêm da API em decímetros/hectogramas.
+  document.getElementById('detailHeight').textContent = (p.height / 10).toString().replace('.', ',') + ' m';
+  document.getElementById('detailWeight').textContent = (p.weight / 10).toString().replace('.', ',') + ' kg';
+  document.getElementById('detailAbilities').textContent = p.abilities.map(a => capitalize(a.ability.name)).join(', ');
+  updateFavBtn();
 
-      const maxStat = 150;
-      STAT_BARS.forEach(([statName, barId, valId]) => {
-        const val = getStat(p, statName);
-        document.getElementById(barId).style.width = Math.min(100, (val / maxStat) * 100) + '%';
-        document.getElementById(valId).textContent = val;
-      });
-    }
+  const maxStat = 150;
+  STAT_BARS.forEach(([statName, barId, valId]) => {
+    const val = getStat(p, statName);
+    document.getElementById(barId).style.width = Math.min(100, (val / maxStat) * 100) + '%';
+    document.getElementById(valId).textContent = val;
+  });
+}
 
 function updateFavBtn() {
-      const btn = document.getElementById('detailFavBtn');
-      const isFav = favorites.has(currentDetailId);
-      btn.textContent = isFav ? '★ Favoritado' : '☆ Favoritar';
-    }
+  const btn = document.getElementById('detailFavBtn');
+  const isFav = favorites.has(currentDetailId);
+  btn.textContent = isFav ? '★ Favoritado' : '☆ Favoritar';
+}
 
 function toggleFavorite(id) {
-      if (favorites.has(id)) {
-        favorites.delete(id);
-      } else {
-        favorites.add(id);
-      }
-    }
+  if (favorites.has(id)) {
+    favorites.delete(id);
+  } else {
+    favorites.add(id);
+  }
+}
 
 async function showScreen(name) {
-      document.querySelectorAll('.screen').forEach(s => {
-        s.hidden = true;
-      });
-      document.getElementById(name).hidden = false;
-      if (name === 'lista') {
-        if (pokemons.length === 0) {
-          await fetchPokemonBatch(0, POKEMONS_PER_PAGE);
-        }
-        renderList();
-      }
-      if (name === 'favoritos') renderFavorites();
+  document.querySelectorAll('.screen').forEach(s => {
+    s.hidden = true;
+  });
+  document.getElementById(name).hidden = false;
+  if (name === 'lista') {
+    if (pokemons.length === 0) {
+      await fetchPokemonBatch(0, POKEMONS_PER_PAGE);
     }
+    renderList();
+  }
+  if (name === 'favoritos') renderFavorites();
+}
 
 
 // Login: decorativo, entra sem validar nada.
 document.getElementById('btnEntrar').addEventListener('click', () => showScreen('lista'));
-  document.getElementById('btnCriarConta').addEventListener('click', () => showScreen('lista'));
+document.getElementById('btnCriarConta').addEventListener('click', () => showScreen('lista'));
 
-  document.getElementById('tabEntrar').addEventListener('click', () => {
-    document.getElementById('tabEntrar').classList.add('on');
-    document.getElementById('tabEntrar').setAttribute('aria-selected', 'true');
-    document.getElementById('tabCriarConta').classList.remove('on');
-    document.getElementById('tabCriarConta').setAttribute('aria-selected', 'false');
-    document.getElementById('loginTitle').textContent = 'Olá, treinador';
-    document.getElementById('loginSub').textContent = 'Entre para acessar seus favoritos.';
-    document.getElementById('btnEntrar').textContent = 'Entrar';
-  });
+document.getElementById('tabEntrar').addEventListener('click', () => {
+  document.getElementById('tabEntrar').classList.add('on');
+  document.getElementById('tabEntrar').setAttribute('aria-selected', 'true');
+  document.getElementById('tabCriarConta').classList.remove('on');
+  document.getElementById('tabCriarConta').setAttribute('aria-selected', 'false');
+  document.getElementById('loginTitle').textContent = 'Olá, treinador';
+  document.getElementById('loginSub').textContent = 'Entre para acessar seus favoritos.';
+  document.getElementById('btnEntrar').textContent = 'Entrar';
+});
 
-  document.getElementById('tabCriarConta').addEventListener('click', () => {
-    document.getElementById('tabCriarConta').classList.add('on');
-    document.getElementById('tabCriarConta').setAttribute('aria-selected', 'true');
-    document.getElementById('tabEntrar').classList.remove('on');
-    document.getElementById('tabEntrar').setAttribute('aria-selected', 'false');
-    document.getElementById('loginTitle').textContent = 'Crie sua conta';
-    document.getElementById('loginSub').textContent = 'Cadastre-se para acessar seus favoritos.';
-    document.getElementById('btnEntrar').textContent = 'Criar conta';
-  });
+document.getElementById('tabCriarConta').addEventListener('click', () => {
+  document.getElementById('tabCriarConta').classList.add('on');
+  document.getElementById('tabCriarConta').setAttribute('aria-selected', 'true');
+  document.getElementById('tabEntrar').classList.remove('on');
+  document.getElementById('tabEntrar').setAttribute('aria-selected', 'false');
+  document.getElementById('loginTitle').textContent = 'Crie sua conta';
+  document.getElementById('loginSub').textContent = 'Cadastre-se para acessar seus favoritos.';
+  document.getElementById('btnEntrar').textContent = 'Criar conta';
+});
 
-  // Navegação (navbar / botão sair)
-  document.querySelectorAll('[data-nav]').forEach(el => {
-    el.addEventListener('click', () => showScreen(el.dataset.nav));
-  });
+// Navegação (navbar / botão sair)
+document.querySelectorAll('[data-nav]').forEach(el => {
+  el.addEventListener('click', () => showScreen(el.dataset.nav));
+});
 
-  document.getElementById('backBtn').addEventListener('click', () => showScreen('lista'));
+document.getElementById('backBtn').addEventListener('click', () => showScreen('lista'));
 
-  // Cards da lista: clique abre detalhes, clique na estrela favorita
-  document.getElementById('cardGrid').addEventListener('click', (e) => {
-    const favEl = e.target.closest('[data-fav]');
-    if (favEl) {
-      toggleFavorite(Number(favEl.dataset.fav));
-      renderList();
-      return;
-    }
+// Cards da lista: clique abre detalhes, clique na estrela favorita
+document.getElementById('cardGrid').addEventListener('click', (e) => {
+  const favEl = e.target.closest('[data-fav]');
+  if (favEl) {
+    toggleFavorite(Number(favEl.dataset.fav));
+    renderList();
+    return;
+  }
 
-    const card = e.target.closest('.poke-card');
-    if (card) {
-      renderDetail(Number(card.dataset.id));
-      showScreen('detalhes');
-    }
-  });
+  const card = e.target.closest('.poke-card');
+  if (card) {
+    renderDetail(Number(card.dataset.id));
+    showScreen('detalhes');
+  }
+});
 
-  document.getElementById('detailFavBtn').addEventListener('click', () => {
-    toggleFavorite(currentDetailId);
-    updateFavBtn();
-  });
+document.getElementById('detailFavBtn').addEventListener('click', () => {
+  toggleFavorite(currentDetailId);
+  updateFavBtn();
+});
 
-  // Favoritos: remover da lista
-  document.getElementById('favGrid').addEventListener('click', (e) => {
-    const removeEl = e.target.closest('[data-fav]');
-    if (removeEl) {
-      toggleFavorite(Number(removeEl.dataset.fav));
-      renderFavorites();
-    }
-  });
+// Favoritos: remover da lista
+document.getElementById('favGrid').addEventListener('click', (e) => {
+  const removeEl = e.target.closest('[data-fav]');
+  if (removeEl) {
+    toggleFavorite(Number(removeEl.dataset.fav));
+    renderFavorites();
+  }
+});
+
+const buscaInput = document.getElementById('buscaPokemon');
+if (buscaInput) {
+  buscaInput.addEventListener('input', () => renderList());
+}
+const filtroTipoSelect = document.getElementById('filtroTipo');
+if (filtroTipoSelect) {
+  filtroTipoSelect.addEventListener('change', () => renderList());
+}
