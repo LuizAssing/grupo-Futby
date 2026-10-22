@@ -193,7 +193,7 @@ async function showScreen(name) {
   }
   if (name === 'favoritos') renderFavorites();
 }
-}
+
 
 // Login: decorativo, entra sem validar nada.
 document.getElementById('btnEntrar').addEventListener('click', () => showScreen('lista'));
