@@ -10,7 +10,7 @@ Repositório com os trabalhos acadêmicos do Grupo Futby, desenvolvidos durante 
 
 - Luiz Assing
 - Manoel Camargo
-- Lucas Silva
+- Lucas Daniel
 - Fabricio
 
 ---

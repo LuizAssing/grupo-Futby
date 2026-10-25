@@ -87,10 +87,12 @@ const STAT_BARS = [
 // ============ RODADA 6 (LUIZ) ============
 // Chave do localStorage para persistir os favoritos
 const STORAGE_FAVORITES_KEY = 'pokedex_favoritos_v1';
+// Cada treinador tem sua própria chave (a chave base + o id do usuário no Supabase)
+let favoritesKey = STORAGE_FAVORITES_KEY;
 // Recupera os favoritos salvos no navegador (ou inicia com Pikachu #25 se for a primeira vez)
 function loadFavorites() {
   try {
-    const salvo = localStorage.getItem(STORAGE_FAVORITES_KEY);
+    const salvo = localStorage.getItem(favoritesKey);
     if (salvo) {
       const ids = JSON.parse(salvo);
       return new Set(ids);
@@ -103,12 +105,42 @@ function loadFavorites() {
 // Salva a lista de favoritos no localStorage
 function saveFavorites() {
   try {
-    localStorage.setItem(STORAGE_FAVORITES_KEY, JSON.stringify(Array.from(favorites)));
+    localStorage.setItem(favoritesKey, JSON.stringify(Array.from(favorites)));
   } catch (erro) {
     console.error('Erro ao salvar favoritos no localStorage:', erro);
   }
 }
 let favorites = loadFavorites();
+// Troca a lista de favoritos para a do treinador logado (ou volta à padrão ao sair)
+function usarFavoritosDoUsuario(userId) {
+  favoritesKey = userId ? `${STORAGE_FAVORITES_KEY}_${userId}` : STORAGE_FAVORITES_KEY;
+  favorites = loadFavorites();
+}
+
+// Busca os favoritos do treinador na tabela "favoritos" do Supabase (vale em qualquer computador)
+async function carregarFavoritosDaNuvem(userId) {
+  usarFavoritosDoUsuario(userId);
+  if (!db || !userId) return;
+  const { data, error } = await db.from('favoritos').select('pokemon_id');
+  if (error) {
+    console.error('Erro ao carregar favoritos da nuvem:', error);
+    return;
+  }
+  favorites = new Set(data.map(f => f.pokemon_id));
+  saveFavorites();
+}
+
+// Envia para o Supabase a inclusão ou remoção de um favorito
+async function sincronizarFavorito(id, adicionando) {
+  if (!db) return;
+  const { data } = await db.auth.getSession();
+  if (!data.session) return;
+  const { error } = adicionando
+    ? await db.from('favoritos').insert({ pokemon_id: id })
+    : await db.from('favoritos').delete().eq('pokemon_id', id);
+  // 23505 = favorito já existia na nuvem, pode ignorar
+  if (error && error.code !== '23505') console.error('Erro ao sincronizar favorito:', error);
+}
 
 function findPokemon(id) {
   return pokemons.find(p => p.id === id);
@@ -268,12 +300,14 @@ if (btnCarregarMais) {
   });
 }
   function toggleFavorite(id) {
-    if (favorites.has(id)) {
-      favorites.delete(id);
-    } else {
+    const adicionando = !favorites.has(id);
+    if (adicionando) {
       favorites.add(id);
+    } else {
+      favorites.delete(id);
     }
     saveFavorites(); // Salva no localStorage imediatamente
+    sincronizarFavorito(id, adicionando); // E também na nuvem (Supabase)
   }
 
     async function showScreen(name) {
@@ -301,6 +335,21 @@ if (btnCarregarMais) {
   const tabCriarConta = document.getElementById('tabCriarConta');
   const btnAcaoPrincipal = document.getElementById('btnEntrar');
   const btnAlternarModo = document.getElementById('btnAlternarModo');
+  const aceiteTermos = document.getElementById('aceiteTermos');
+
+  // Mensagens do Supabase traduzidas para português
+  const ERROS_AUTH = {
+    user_already_exists: 'Este e-mail já está cadastrado!',
+    email_address_invalid: 'E-mail inválido. Verifique o endereço digitado.',
+    weak_password: 'Senha fraca. Use pelo menos 8 caracteres.',
+    over_email_send_rate_limit: 'Muitas tentativas. Aguarde alguns minutos e tente novamente.',
+    over_request_rate_limit: 'Muitas tentativas. Aguarde alguns minutos e tente novamente.'
+  };
+
+  function traduzirErroAuth(error) {
+    if (error.message === 'User already registered') return ERROS_AUTH.user_already_exists;
+    return ERROS_AUTH[error.code] || 'Não foi possível criar a conta. Tente novamente.';
+  }
 
   function exibirFeedback(mensagem, tipo = 'erro') {
     if (!loginFeedback) return;
@@ -363,8 +412,18 @@ if (btnCarregarMais) {
       return;
     }
 
-    if (senha.length < 6) {
-      exibirFeedback('A senha deve ter no mínimo 6 caracteres.');
+    if (!inputEmail.checkValidity()) {
+      exibirFeedback('Informe um e-mail válido (ex.: nome@exemplo.com).');
+      return;
+    }
+
+    if (modoAuth === 'criar' && senha.length < 8) {
+      exibirFeedback('A senha deve ter no mínimo 8 caracteres.');
+      return;
+    }
+
+    if (modoAuth === 'criar' && !aceiteTermos.checked) {
+      exibirFeedback('Você precisa aceitar os termos de uso para criar a conta.');
       return;
     }
 
@@ -390,10 +449,11 @@ if (btnCarregarMais) {
         });
 
         if (error) {
-          exibirFeedback(error.message === 'User already registered' ? 'Este e-mail já está cadastrado!' : error.message);
+          exibirFeedback(traduzirErroAuth(error));
           return;
         }
 
+        await carregarFavoritosDaNuvem(data.user?.id);
         exibirFeedback('Conta criada com sucesso na nuvem! Entrando...', 'sucesso');
         setTimeout(() => {
           atualizarNomeUsuario(nome);
@@ -412,6 +472,7 @@ if (btnCarregarMais) {
         }
 
         const nomeTreinador = data.user?.user_metadata?.nome_treinador || email.split('@')[0];
+        await carregarFavoritosDaNuvem(data.user?.id);
         atualizarNomeUsuario(nomeTreinador);
         limparFeedback();
         inputEmail.value = '';
@@ -431,6 +492,7 @@ if (btnCarregarMais) {
   document.querySelectorAll('[data-nav="login"]').forEach(btn => {
     btn.addEventListener('click', async () => {
       if (db) await db.auth.signOut();
+      usarFavoritosDoUsuario(null);
       atualizarNomeUsuario('Ash');
       showScreen('login');
     });
@@ -501,6 +563,7 @@ if (btnCarregarMais) {
     const { data } = await db.auth.getSession();
     const user = data.session?.user;
     if (!user) return;
+    await carregarFavoritosDaNuvem(user.id);
     atualizarNomeUsuario(user.user_metadata?.nome_treinador || user.email.split('@')[0]);
     showScreen('lista');
   }
