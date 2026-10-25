@@ -1,10 +1,8 @@
 const SUPABASE_URL = 'https://gxgfvpevsgokfhtadspu.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4Z2Z2cGV2c2dva2ZodGFkc3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5MjQ1MjksImV4cCI6MjEwODUwMDUyOX0.Pg249Sm5IXWDMq9uDGD-nRGZ1kCMvyrzxHB4N0mXAso';
 const db = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
-// URL base da PokéAPI oficial
 const API_BASE_URL = 'https://pokeapi.co/api/v2';
 const POKEMONS_PER_PAGE = 20;
-// Lista dinâmica preenchida pela PokéAPI
 let pokemons = [];
 let currentOffset = 0;
 let isLoading = false;
@@ -33,13 +31,11 @@ const TYPE_LABELS = {
   flying: { label: 'Voador', cls: 't-flying' },
   dark: { label: 'Sombrio', cls: 't-dark' }
 };
-// Requisição assíncrona para buscar detalhes individuais de cada Pokémon
 async function fetchPokemonDetails(url) {
   const response = await fetch(url);
   if (!response.ok) throw new Error('Erro ao buscar dados do Pokémon');
   return await response.json();
 }
-// Requisição assíncrona para buscar um lote de Pokémons diretamente da PokéAPI
 async function fetchPokemonBatch(offset = 0, limit = POKEMONS_PER_PAGE) {
   if (isLoading) return [];
   isLoading = true;
@@ -85,7 +81,6 @@ const STAT_BARS = [
 ];
 
 // ============ RODADA 6 (LUIZ) ============
-// Chave do localStorage para persistir os favoritos
 const STORAGE_FAVORITES_KEY = 'pokedex_favoritos_v1';
 // Cada treinador tem sua própria chave (a chave base + o id do usuário no Supabase)
 let favoritesKey = STORAGE_FAVORITES_KEY;
@@ -102,7 +97,6 @@ function loadFavorites() {
   }
   return new Set([25]);
 }
-// Salva a lista de favoritos no localStorage
 function saveFavorites() {
   try {
     localStorage.setItem(favoritesKey, JSON.stringify(Array.from(favorites)));
@@ -192,7 +186,6 @@ function getFilteredPokemons() {
   const cleanSearch = searchTerm.replace(/^#/, '');
 
   return pokemons.filter(p => {
-    // Busca por texto: confere nome ou número
     const matchesName = p.name.toLowerCase().includes(cleanSearch);
     const matchesNumber = String(p.id).includes(cleanSearch) ||
       String(p.id).padStart(3, '0').includes(cleanSearch);
@@ -281,15 +274,11 @@ const btnCarregarMais = document.getElementById('btnCarregarMais');
 if (btnCarregarMais) {
   btnCarregarMais.addEventListener('click', async () => {
     if (isLoading || !hasMorePokemons) return;
-    // Feedback visual: desabilita o botão e muda o texto enquanto baixa
     const textoOriginal = btnCarregarMais.textContent;
     btnCarregarMais.disabled = true;
     btnCarregarMais.textContent = 'Carregando Pokémons...';
-    // Busca o próximo lote a partir do currentOffset atual
     await fetchPokemonBatch(currentOffset, POKEMONS_PER_PAGE);
-    // Re-renderiza a lista (mantendo os filtros ativos se houver)
     renderList();
-    // Restaura o botão ou avisa se acabaram todos os Pokémons
     if (!hasMorePokemons) {
       btnCarregarMais.textContent = 'Todos os Pokémons foram carregados';
       btnCarregarMais.disabled = true;
@@ -306,8 +295,8 @@ if (btnCarregarMais) {
     } else {
       favorites.delete(id);
     }
-    saveFavorites(); // Salva no localStorage imediatamente
-    sincronizarFavorito(id, adicionando); // E também na nuvem (Supabase)
+    saveFavorites();
+    sincronizarFavorito(id, adicionando);
   }
 
     async function showScreen(name) {
