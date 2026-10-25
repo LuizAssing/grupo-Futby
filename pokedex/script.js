@@ -9,6 +9,7 @@ let pokemons = [];
 let currentOffset = 0;
 let isLoading = false;
 let hasMorePokemons = true;
+let currentDetailId = null;
 // Tradução e classes de cores para todos os tipos de Pokémon
 const TYPE_LABELS = {
   grass: { label: 'Grama', cls: 't-grass' },
@@ -263,13 +264,6 @@ if (btnCarregarMais) {
     }
   });
 }
-
-function toggleFavorite(id) {
-  if (favorites.has(id)) {
-    favorites.delete(id);
-  } else {
-    favorites.add(id);
-  }
   function toggleFavorite(id) {
     if (favorites.has(id)) {
       favorites.delete(id);
@@ -279,19 +273,19 @@ function toggleFavorite(id) {
     saveFavorites(); // Salva no localStorage imediatamente
   }
 
-  async function showScreen(name) {
-    document.querySelectorAll('.screen').forEach(s => {
-      s.hidden = true;
-    });
-    document.getElementById(name).hidden = false;
-    if (name === 'lista') {
-      if (pokemons.length === 0) {
-        await fetchPokemonBatch(0, POKEMONS_PER_PAGE);
+    async function showScreen(name) {
+      document.querySelectorAll('.screen').forEach(s => {
+        s.hidden = true;
+      });
+      document.getElementById(name).hidden = false;
+      if (name === 'lista') {
+        if (pokemons.length === 0) {
+          await fetchPokemonBatch(0, POKEMONS_PER_PAGE);
+        }
+        renderList();
       }
-      renderList();
+      if (name === 'favoritos') renderFavorites();
     }
-    if (name === 'favoritos') renderFavorites();
-  }
 
   // ============ AUTENTICAÇÃO COM SUPABASE ============
   let modoAuth = 'entrar';
@@ -487,26 +481,4 @@ function toggleFavorite(id) {
   const filtroTipoSelect = document.getElementById('filtroTipo');
   if (filtroTipoSelect) {
     filtroTipoSelect.addEventListener('change', () => renderList());
-  }
-
-  // ============ PAGINAÇÃO: CARREGAR MAIS (LUCAS) ============
-  const btnCarregarMais = document.getElementById('btnCarregarMais');
-  if (btnCarregarMais) {
-    btnCarregarMais.addEventListener('click', async () => {
-      if (isLoading) return;
-      const textoOriginal = btnCarregarMais.textContent;
-      btnCarregarMais.disabled = true;
-      btnCarregarMais.textContent = 'Carregando Pokémons...';
-      // Busca os próximos 20 Pokémons da PokéAPI
-      const novos = await fetchPokemonBatch(currentOffset, POKEMONS_PER_PAGE);
-      renderList();
-      // Se a PokéAPI não devolver mais nenhum, avisa que acabou
-      if (!novos || novos.length === 0) {
-        btnCarregarMais.textContent = 'Todos os Pokémons foram carregados';
-        btnCarregarMais.disabled = true;
-      } else {
-        btnCarregarMais.textContent = textoOriginal;
-        btnCarregarMais.disabled = false;
-      }
-    });
   }
