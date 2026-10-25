@@ -5,6 +5,7 @@ const POKEMONS_PER_PAGE = 20;
 let pokemons = [];
 let currentOffset = 0;
 let isLoading = false;
+let hasMorePokemons = true;
 // Tradução e classes de cores para todos os tipos de Pokémon
 const TYPE_LABELS = {
   grass: { label: 'Grama', cls: 't-grass' },
@@ -44,6 +45,9 @@ async function fetchPokemonBatch(offset = 0, limit = POKEMONS_PER_PAGE) {
     const response = await fetch(`${API_BASE_URL}/pokemon?offset=${offset}&limit=${limit}`);
     if (!response.ok) throw new Error('Falha ao conectar com a PokéAPI');
     const data = await response.json();
+    if (!data.next) {
+  hasMorePokemons = false;
+  }
     // Busca os dados completos de todos os Pokémons da página em paralelo
     const detailPromises = data.results.map(item => fetchPokemonDetails(item.url));
     const newPokemons = await Promise.all(detailPromises);
