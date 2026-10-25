@@ -10,6 +10,8 @@ let currentOffset = 0;
 let isLoading = false;
 let hasMorePokemons = true;
 let currentDetailId = null;
+// Tela de onde o usuário abriu os detalhes (para o botão Voltar)
+let telaAnterior = 'lista';
 // Tradução e classes de cores para todos os tipos de Pokémon
 const TYPE_LABELS = {
   grass: { label: 'Grama', cls: 't-grass' },
@@ -28,7 +30,8 @@ const TYPE_LABELS = {
   ice: { label: 'Gelo', cls: 't-ice' },
   dragon: { label: 'Dragão', cls: 't-dragon' },
   fighting: { label: 'Lutador', cls: 't-fighting' },
-  flying: { label: 'Voador', cls: 't-flying' }
+  flying: { label: 'Voador', cls: 't-flying' },
+  dark: { label: 'Sombrio', cls: 't-dark' }
 };
 // Requisição assíncrona para buscar detalhes individuais de cada Pokémon
 async function fetchPokemonDetails(url) {
@@ -440,7 +443,7 @@ if (btnCarregarMais) {
     }
   });
 
-  document.getElementById('backBtn').addEventListener('click', () => showScreen('lista'));
+  document.getElementById('backBtn').addEventListener('click', () => showScreen(telaAnterior));
 
   // Cards da lista: clique abre detalhes, clique na estrela favorita
   document.getElementById('cardGrid').addEventListener('click', (e) => {
@@ -453,6 +456,7 @@ if (btnCarregarMais) {
 
     const card = e.target.closest('.poke-card');
     if (card) {
+      telaAnterior = 'lista';
       renderDetail(Number(card.dataset.id));
       showScreen('detalhes');
     }
@@ -463,12 +467,20 @@ if (btnCarregarMais) {
     updateFavBtn();
   });
 
-  // Favoritos: remover da lista
+  // Favoritos: clique no ✕ remove, clique no item abre os detalhes
   document.getElementById('favGrid').addEventListener('click', (e) => {
     const removeEl = e.target.closest('[data-fav]');
     if (removeEl) {
       toggleFavorite(Number(removeEl.dataset.fav));
       renderFavorites();
+      return;
+    }
+
+    const item = e.target.closest('.fav-list-item');
+    if (item) {
+      telaAnterior = 'favoritos';
+      renderDetail(Number(item.dataset.id));
+      showScreen('detalhes');
     }
   });
 
@@ -482,3 +494,15 @@ if (btnCarregarMais) {
   if (filtroTipoSelect) {
     filtroTipoSelect.addEventListener('change', () => renderList());
   }
+
+  // Mantém o treinador logado ao recarregar a página (F5)
+  async function restaurarSessao() {
+    if (!db) return;
+    const { data } = await db.auth.getSession();
+    const user = data.session?.user;
+    if (!user) return;
+    atualizarNomeUsuario(user.user_metadata?.nome_treinador || user.email.split('@')[0]);
+    showScreen('lista');
+  }
+
+  restaurarSessao();
