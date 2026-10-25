@@ -73,8 +73,31 @@ const STAT_BARS = [
   ['speed', 'statSpeed', 'statSpeedVal']
 ];
 
-let favorites = new Set([25]);
-let currentDetailId = null;
+// ============ RODADA 6 (LUIZ) ============
+// Chave do localStorage para persistir os favoritos
+const STORAGE_FAVORITES_KEY = 'pokedex_favoritos_v1';
+// Recupera os favoritos salvos no navegador (ou inicia com Pikachu #25 se for a primeira vez)
+function loadFavorites() {
+  try {
+    const salvo = localStorage.getItem(STORAGE_FAVORITES_KEY);
+    if (salvo) {
+      const ids = JSON.parse(salvo);
+      return new Set(ids);
+    }
+  } catch (erro) {
+    console.error('Erro ao ler favoritos do localStorage:', erro);
+  }
+  return new Set([25]);
+}
+// Salva a lista de favoritos no localStorage
+function saveFavorites() {
+  try {
+    localStorage.setItem(STORAGE_FAVORITES_KEY, JSON.stringify(Array.from(favorites)));
+  } catch (erro) {
+    console.error('Erro ao salvar favoritos no localStorage:', erro);
+  }
+}
+let favorites = loadFavorites();
 
 function findPokemon(id) {
   return pokemons.find(p => p.id === id);
@@ -147,9 +170,21 @@ function renderList() {
 }
 
 
-function renderFavorites() {
-  const favPokemons = pokemons.filter(p => favorites.has(p.id));
+async function renderFavorites() {
   const grid = document.getElementById('favGrid');
+
+  const idsFaltantes = Array.from(favorites).filter(id => !pokemons.some(p => p.id === id));
+  if (idsFaltantes.length > 0) {
+    try {
+      const promessas = idsFaltantes.map(id => fetchPokemonDetails(`${API_BASE_URL}/pokemon/${id}`));
+      const novosDetalhes = await Promise.all(promessas);
+      pokemons = [...pokemons, ...novosDetalhes];
+    } catch (e) {
+      console.error('Erro ao carregar favoritos da PokéAPI:', e);
+    }
+  }
+
+  const favPokemons = pokemons.filter(p => favorites.has(p.id));
 
   if (favPokemons.length === 0) {
     grid.innerHTML = '<li class="sub">Você ainda não favoritou nenhum Pokémon.</li>';
@@ -205,6 +240,14 @@ function toggleFavorite(id) {
   } else {
     favorites.add(id);
   }
+  function toggleFavorite(id) {
+  if (favorites.has(id)) {
+    favorites.delete(id);
+  } else {
+    favorites.add(id);
+  }
+  saveFavorites(); // Salva no localStorage imediatamente
+}
 }
 
 async function showScreen(name) {
