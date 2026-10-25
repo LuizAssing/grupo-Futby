@@ -238,6 +238,29 @@ function updateFavBtn() {
   btn.textContent = isFav ? '★ Favoritado' : '☆ Favoritar';
 }
 
+const btnCarregarMais = document.getElementById('btnCarregarMais');
+if (btnCarregarMais) {
+  btnCarregarMais.addEventListener('click', async () => {
+    if (isLoading || !hasMorePokemons) return;
+    // Feedback visual: desabilita o botão e muda o texto enquanto baixa
+    const textoOriginal = btnCarregarMais.textContent;
+    btnCarregarMais.disabled = true;
+    btnCarregarMais.textContent = 'Carregando Pokémons...';
+    // Busca o próximo lote a partir do currentOffset atual
+    await fetchPokemonBatch(currentOffset, POKEMONS_PER_PAGE);
+    // Re-renderiza a lista (mantendo os filtros ativos se houver)
+    renderList();
+    // Restaura o botão ou avisa se acabaram todos os Pokémons
+    if (!hasMorePokemons) {
+      btnCarregarMais.textContent = 'Todos os Pokémons foram carregados';
+      btnCarregarMais.disabled = true;
+    } else {
+      btnCarregarMais.textContent = textoOriginal;
+      btnCarregarMais.disabled = false;
+    }
+  });
+}
+
 function toggleFavorite(id) {
   if (favorites.has(id)) {
     favorites.delete(id);
