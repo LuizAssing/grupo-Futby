@@ -1,3 +1,6 @@
+const SUPABASE_URL = 'https://gxgfvpevsgokfhtadspu.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd4Z2Z2cGV2c2dva2ZodGFkc3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5MjQ1MjksImV4cCI6MjEwODUwMDUyOX0.Pg249Sm5IXWDMq9uDGD-nRGZ1kCMvyrzxHB4N0mXAso';
+const db = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 // URL base da PokéAPI oficial
 const API_BASE_URL = 'https://pokeapi.co/api/v2';
 const POKEMONS_PER_PAGE = 20;
@@ -241,13 +244,13 @@ function toggleFavorite(id) {
     favorites.add(id);
   }
   function toggleFavorite(id) {
-  if (favorites.has(id)) {
-    favorites.delete(id);
-  } else {
-    favorites.add(id);
+    if (favorites.has(id)) {
+      favorites.delete(id);
+    } else {
+      favorites.add(id);
+    }
+    saveFavorites(); // Salva no localStorage imediatamente
   }
-  saveFavorites(); // Salva no localStorage imediatamente
-}
 }
 
 async function showScreen(name) {
@@ -265,72 +268,73 @@ async function showScreen(name) {
 }
 
 
-// Login: decorativo, entra sem validar nada.
-document.getElementById('btnEntrar').addEventListener('click', () => showScreen('lista'));
-document.getElementById('btnCriarConta').addEventListener('click', () => showScreen('lista'));
 
-document.getElementById('tabEntrar').addEventListener('click', () => {
-  document.getElementById('tabEntrar').classList.add('on');
-  document.getElementById('tabEntrar').setAttribute('aria-selected', 'true');
-  document.getElementById('tabCriarConta').classList.remove('on');
-  document.getElementById('tabCriarConta').setAttribute('aria-selected', 'false');
-  document.getElementById('loginTitle').textContent = 'Olá, treinador';
-  document.getElementById('loginSub').textContent = 'Entre para acessar seus favoritos.';
-  document.getElementById('btnEntrar').textContent = 'Entrar';
-});
-
-document.getElementById('tabCriarConta').addEventListener('click', () => {
-  document.getElementById('tabCriarConta').classList.add('on');
-  document.getElementById('tabCriarConta').setAttribute('aria-selected', 'true');
-  document.getElementById('tabEntrar').classList.remove('on');
-  document.getElementById('tabEntrar').setAttribute('aria-selected', 'false');
-  document.getElementById('loginTitle').textContent = 'Crie sua conta';
-  document.getElementById('loginSub').textContent = 'Cadastre-se para acessar seus favoritos.';
-  document.getElementById('btnEntrar').textContent = 'Criar conta';
-});
-
-// Navegação (navbar / botão sair)
-document.querySelectorAll('[data-nav]').forEach(el => {
-  el.addEventListener('click', () => showScreen(el.dataset.nav));
-});
-
-document.getElementById('backBtn').addEventListener('click', () => showScreen('lista'));
-
-// Cards da lista: clique abre detalhes, clique na estrela favorita
-document.getElementById('cardGrid').addEventListener('click', (e) => {
-  const favEl = e.target.closest('[data-fav]');
-  if (favEl) {
-    toggleFavorite(Number(favEl.dataset.fav));
-    renderList();
-    return;
-  }
-
-  const card = e.target.closest('.poke-card');
-  if (card) {
-    renderDetail(Number(card.dataset.id));
-    showScreen('detalhes');
-  }
-});
-
-document.getElementById('detailFavBtn').addEventListener('click', () => {
-  toggleFavorite(currentDetailId);
-  updateFavBtn();
-});
-
-// Favoritos: remover da lista
-document.getElementById('favGrid').addEventListener('click', (e) => {
-  const removeEl = e.target.closest('[data-fav]');
-  if (removeEl) {
-    toggleFavorite(Number(removeEl.dataset.fav));
-    renderFavorites();
-  }
-});
-
-const buscaInput = document.getElementById('buscaPokemon');
-if (buscaInput) {
-  buscaInput.addEventListener('input', () => renderList());
+let modoAuth = 'entrar';
+const loginFeedback = document.getElementById('loginFeedback');
+const campoNomeWrap = document.getElementById('campoNomeWrap');
+const inputNome = document.getElementById('loginNome');
+const inputEmail = document.getElementById('loginEmail');
+const inputSenha = document.getElementById('loginSenha');
+const tabEntrar = document.getElementById('tabEntrar');
+const tabCriarConta = document.getElementById('tabCriarConta');
+const btnAcaoPrincipal = document.getElementById('btnEntrar');
+const btnAlternarModo = document.getElementById('btnAlternarModo');
+function exibirFeedback(mensagem, tipo = 'erro') {
+  if (!loginFeedback) return;
+  loginFeedback.textContent = mensagem;
+  loginFeedback.className = `feedback-msg ${tipo}`;
+  loginFeedback.hidden = false;
 }
-const filtroTipoSelect = document.getElementById('filtroTipo');
-if (filtroTipoSelect) {
-  filtroTipoSelect.addEventListener('change', () => renderList());
+function limparFeedback() {
+  if (loginFeedback) loginFeedback.hidden = true;
 }
+function alternarAba(modo) {
+  modoAuth = modo;
+  limparFeedback();
+
+
+  // Navegação (navbar / botão sair)
+  document.querySelectorAll('[data-nav]').forEach(el => {
+    el.addEventListener('click', () => showScreen(el.dataset.nav));
+  });
+
+  document.getElementById('backBtn').addEventListener('click', () => showScreen('lista'));
+
+  // Cards da lista: clique abre detalhes, clique na estrela favorita
+  document.getElementById('cardGrid').addEventListener('click', (e) => {
+    const favEl = e.target.closest('[data-fav]');
+    if (favEl) {
+      toggleFavorite(Number(favEl.dataset.fav));
+      renderList();
+      return;
+    }
+
+    const card = e.target.closest('.poke-card');
+    if (card) {
+      renderDetail(Number(card.dataset.id));
+      showScreen('detalhes');
+    }
+  });
+
+  document.getElementById('detailFavBtn').addEventListener('click', () => {
+    toggleFavorite(currentDetailId);
+    updateFavBtn();
+  });
+
+  // Favoritos: remover da lista
+  document.getElementById('favGrid').addEventListener('click', (e) => {
+    const removeEl = e.target.closest('[data-fav]');
+    if (removeEl) {
+      toggleFavorite(Number(removeEl.dataset.fav));
+      renderFavorites();
+    }
+  });
+
+  const buscaInput = document.getElementById('buscaPokemon');
+  if (buscaInput) {
+    buscaInput.addEventListener('input', () => renderList());
+  }
+  const filtroTipoSelect = document.getElementById('filtroTipo');
+  if (filtroTipoSelect) {
+    filtroTipoSelect.addEventListener('change', () => renderList());
+  }

@@ -662,3 +662,25 @@ h2 {
   font-size: 17px;
   cursor: pointer;
 }
+
+.feedback-msg {
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 16px;
+  text-align: center;
+  transition: all 0.2s ease;
+}
+
+.feedback-msg.erro {
+  background: #FDEAE7;
+  color: #C94A3B;
+  border: 1px solid #F5C6CB;
+}
+
+.feedback-msg.sucesso {
+  background: #E8F4EA;
+  color: #2D6A4F;
+  border: 1px solid #C3E6CB;
+}
